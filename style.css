@@ -68,6 +68,10 @@ h1 {
     cursor: pointer;
 }
 
+#score {
+    text-align: center;
+}
+
 @media screen and (max-width: 505px) {
     #board > div {
         margin: 3px;

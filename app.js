@@ -2,8 +2,9 @@ var memory_array = ['html.jpg', 'css.jpg', 'bootstrap.jpg', 'js.jpg', 'jquery.jp
 var memory_values = [];
 var memory_title_ids = [];
 var tiles_flipped = 0;
+var turn_counter = 0;
 
-
+//randomize array
 Array.prototype.memory_tile_shuffle = function(){
     var i = this.length, j, temp;
     while(--i > 0){
@@ -15,7 +16,7 @@ Array.prototype.memory_tile_shuffle = function(){
 }
 
 
-
+//call a new board
 function newBoard(){
     tiles_flipped = 0; 
     var output = '';
@@ -29,29 +30,41 @@ function newBoard(){
 window.addEventListener("load", newBoard);
 
 function memoryFlipTile(tile, val){
-    if(tile.innerHTML == "" && memory_values.length < 2){
+    
+    if(tile.innerHTML === "" && memory_values.length < 2){
         
         tile.style.backgroundImage = 'url("img/' + val + '")';
         tile.style.backgroundPosition = 'center center';
         
-        if(memory_values.length == 0){
-            memory_values.push(val);
-            memory_title_ids.push(tile.id);
-        } else if(memory_values.length == 1){
+        //check value of first box
+        if(memory_values.length === 0){
             memory_values.push(val);
             memory_title_ids.push(tile.id);
             
-            if(memory_values[0] == memory_values[1]){
+            //check value of second box
+        } else if(memory_values.length === 1){
+            memory_values.push(val);
+            memory_title_ids.push(tile.id);
+            
+            //count every second move
+            turn_counter++;
+            document.getElementById("score").innerHTML = "Turn counter: " + turn_counter;
+            
+            //compare two boxes
+            if(memory_values[0] === memory_values[1]){
                 tiles_flipped += 2;
                 //clear both arrays
                 memory_values = [];
                 memory_title_ids = [];
                 //check to see if the whole board is cleared
-                if(tiles_flipped == memory_array.length){
-                    alert("You win. Click \"OK\" to play again");
-                    document.getElementById('board').innerHTML = "";
+                if(tiles_flipped === memory_array.length){
+                    //if win the match after click ok reload the page
+                    if(!alert('You win! \nNumber of approaches: ' + turn_counter + '\nClick \"OK\" to play again')){
+                        window.location.reload();
+                    }
+                     
+                    document.getElementById("board").innerHTML = "";
                     newBoard();    
-
                 }
             } else {
                 function flip2Back(){
